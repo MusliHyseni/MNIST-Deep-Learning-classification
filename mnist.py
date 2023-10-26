@@ -35,7 +35,7 @@ for j in range(iterations):
         
         layer_1 = relu(np.dot(layer_0, weights_0))
         dropout_mask = np.random.randint(2, size=layer_1.shape)
-        layer_1 *= dropout_mask * 2  # The dropout mask is multiplied by 2, such that the layer_2 doesn't increase its sensitivity to layer_1  
+        layer_1 *= dropout_mask * 2  # The dropout mask is multiplied by 2, such that the layer_2 doesn't increase its sensitivity to layer_1. The reason i chose 2, is because 1/2 of the values are 0. -> ( 1 / (1/2) = 2 )
         
         layer_2 =np.dot(layer_1, weights_1) 
                        
