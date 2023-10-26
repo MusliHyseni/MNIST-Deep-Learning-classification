@@ -7,9 +7,10 @@ images = x_train[0:1000].reshape(1000, 28*28) / 255
 labels = y_train[0:1000]
 one_hot_encode = np.zeros((len(labels), 10))
 
-for i, l in enumerate(labels):
-    one_hot_encode[i][l] = 1
-labels = one_hot_encode
+for i, l in enumerate(labels):      # Takes the index and the value of a label(from the labels matrix),   
+    one_hot_labels[i][l] = 1        # -then goes to the same row-index and label-(column)index on the one-hot matrix, making the value equal to 1 (one-hot encoding).
+labels = one_hot_labels             # The one-hot matrix then becomes the labels matrix, making the labels one-hot encoded.
+   
 
 t_images = x_test[0:1000].reshape(1000, 28*28) / 255
 t_labels = np.zeros((len(y_test), 10))
@@ -22,11 +23,12 @@ alpha = 0.005
 iterations = 360
 px_per_img = 784
 hidden_size = 40
-n_labels = 10
+n_labels = 10    # One label for each number up to 10 (or from 0 to 9 - I'm not sure at the moment)
 
 
-weights_0 = 0.2 * np.random.random((px_per_img, hidden_size)) - 0.1
-weights_1 = 0.2 * np.random.random((hidden_size, n_labels)) - 0.1
+
+weights_0 = 0.2 * np.random.random((px_per_img, hidden_size)) - 0.1  #The process of scaling the weights
+weights_1 = 0.2 * np.random.random((hidden_size, n_labels)) - 0.1    #The process of scaling the weights
 
 for j in range(iterations):
     error, correct_count = (0.0, 0)
@@ -35,7 +37,7 @@ for j in range(iterations):
         
         layer_1 = relu(np.dot(layer_0, weights_0))
         dropout_mask = np.random.randint(2, size=layer_1.shape)
-        layer_1 *= dropout_mask * 2  # The dropout mask is multiplied by 2, such that the layer_2 doesn't increase its sensitivity to layer_1. The reason i chose 2, is because 1/2 of the values are 0. -> ( 1 / (1/2) = 2 )
+        layer_1 *= dropout_mask * 2  # The dropout mask is multiplied by 2, such that the layer_2 doesn't increase its sensitivity to layer_1  
         
         layer_2 =np.dot(layer_1, weights_1) 
                        
@@ -72,3 +74,4 @@ for j in range(iterations):
                          " Train-Accuracy:" + str(correct_count / float(len(images)))
                         )
     
+
