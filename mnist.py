@@ -23,7 +23,6 @@ iterations = 360
 px_per_img = 784
 hidden_size = 40
 n_labels = 10
-p = 0.5
 
 
 weights_0 = 0.2 * np.random.random((px_per_img, hidden_size)) - 0.1
