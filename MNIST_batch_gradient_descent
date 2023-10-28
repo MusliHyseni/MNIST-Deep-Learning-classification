@@ -16,13 +16,15 @@ labels = one_hot_encode             # The one-hot matrix then becomes the labels
 
 t_images = x_test[0:1000].reshape(1000, 28*28) / 255
 t_labels = np.zeros((len(y_test), 10))
+for i, l in enumerate(y_test):
+    t_labels[i][l] = 1
 
 np.random.seed(1)
 relu = lambda x: (x >= 0)*x
 reluderivative = lambda x: x >= 0
 
 batch_size = 100 # The size of the batch
-alpha = 0.005
+alpha = 0.001
 iterations = 360
 px_per_img = 784
 hidden_size = 100
@@ -42,16 +44,15 @@ for j in range(iterations):
         
         layer_1 = relu(np.dot(layer_0, weights_0))
         dropout_mask = np.random.randint(2, size=layer_1.shape)
-        layer_1 *= dropout_mask * 2  # The dropout mask is multiplied by 2, such that the layer_2 doesn't increase its sensitivity to layer_1  
+        layer_1 *= dropout_mask * 2  # The dropout mask is multiplied by 2, so the layer_2 doesn't increase its sensitivity to layer_1  
         
         layer_2 =np.dot(layer_1, weights_1) 
                        
         error += np.sum((labels[batch_start: batch_end] - layer_2)**2)
         for k in range(batch_size): # 0-100
-            correct_count += int(np.argmax(layer_2[k:k+1]) == np.argmax(labels[batch_start+k: batch_end+k+1])) 
-            """Takes the biggest value from the k-th output of layer_2, and compares it with the biggest value of 100 labels, if they are the same, it returns True,
-            int(True) = 1 --> correct_count += 1. If False, int(False) = 0 --> correct_count += 0.
-            """
+            correct_count += int(np.argmax(layer_2[k:k+1]) == np.argmax(labels[batch_start+k: batch_start+k+1])) 
+            """ Compares the biggest value in layer_2[k: k+1] with the biggest value in 100 labels from the labels set, if they are the same, returns True,
+            int(True) = 1 and correct_count += 1; If not the same, it returns False, int(False) = 0 and correct_count += 0."""
             
             layer2_delta = (labels[batch_start: batch_end] - layer_2) / batch_size
         
@@ -83,3 +84,4 @@ for j in range(iterations):
                          " Train-Accuracy:" + str(correct_count / float(len(images)))
                         )
     
+
